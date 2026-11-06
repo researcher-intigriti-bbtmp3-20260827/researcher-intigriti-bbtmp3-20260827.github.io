@@ -3,3 +3,4 @@ This is a Brave Creators publisher verification file.
 Domain: researcher-intigriti-bbtmp3-20260827.github.io
 Token: 818d77f1ef428efbb1d41487c4a2ceebf284d964a3e10347d19799c8ec133e85
 Fixture: stale-transfer-approval-2026-11-06
+Token: 30ddb5174a0136177811243ddded636eb94fdfb9441bf1f65f7ad3cadb2f916c
