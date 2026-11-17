@@ -1,0 +1,22 @@
+<!doctype html>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Controlled Bybit WebView Probe</title>
+<style>body{font:14px monospace;background:#111;color:#eee;padding:12px;word-break:break-word}h1{font:18px sans-serif;color:#f7a600}pre{white-space:pre-wrap;border:1px solid #555;padding:10px}</style>
+<h1>Controlled Bybit WebView Probe</h1><pre id="out">starting</pre>
+<script>
+const log=[]; const out=document.getElementById('out');
+function add(k,v){let s;try{s=typeof v==='string'?v:JSON.stringify(v)}catch(e){s=String(v)}log.push(k+': '+s);out.textContent=log.join('
+')}
+add('href',location.href);add('ua',navigator.userAgent);
+window._b_bridge_callback_=function(){add('callback',Array.from(arguments))};
+function scan(){
+ const names=Object.getOwnPropertyNames(window).filter(x=>/bridge|flutter|bybit|webview|thrio|native/i.test(x)).sort();
+ add('windowNames',names);
+ for(const n of names){try{const v=window[n];add('obj '+n,{type:typeof v,keys:v&&typeof v==='object'?Object.keys(v):[],postMessage:!!(v&&v.postMessage),callHandler:!!(v&&v.callHandler)})}catch(e){add('err '+n,e.message)}}
+ const modules=['Login','SystemInfo','UserProfile'];
+ const methods={Login:['isLogin','getLoginStatus'],SystemInfo:['getSystemInfo','getDeviceInfo'],UserProfile:['getUserProfile','getUserInfo']};
+ for(const m of modules){const b=window['_b_bridge_'+m+'_'];if(b&&typeof b.postMessage==='function')for(const method of methods[m]){const msg={moduleName:m,methodName:method,uniqueId:'probe-'+m+'-'+method+'-'+Date.now(),params:{}};try{b.postMessage(JSON.stringify(msg));add('sent',msg)}catch(e){add('sendErr '+m+'.'+method,e.message)}}}
+}
+addEventListener('flutterInAppWebViewPlatformReady',()=>{add('event','flutterInAppWebViewPlatformReady');scan()});
+setTimeout(scan,500);setTimeout(scan,2500);
+</script>
