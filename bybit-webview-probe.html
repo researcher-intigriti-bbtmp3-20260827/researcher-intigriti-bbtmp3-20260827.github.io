@@ -11,5 +11,6 @@ window._b_bridge_callback_=function(){add('callback',Array.from(arguments))};
 function send(moduleName,methodName){const b=window['_b_bridge_'+moduleName+'_'];const msg={moduleName,methodName,uniqueId:'probe-'+moduleName+'-'+methodName+'-'+Date.now(),params:{}};try{if(!b||typeof b.postMessage!=='function')return add('noBridge',moduleName);b.postMessage(JSON.stringify(msg));add('sent',msg)}catch(e){add('sendError '+moduleName+'.'+methodName,String(e))}}
 function run(){try{add('href',location.href);const names=Object.getOwnPropertyNames(window).filter(x=>x.startsWith('_b_bridge_')).sort();add('bridges',names);for(const n of names){try{const v=window[n];add('obj '+n,{type:typeof v,keys:Object.keys(v||{}),postMessage:typeof(v&&v.postMessage)})}catch(e){add('objError '+n,String(e))}}send('SystemInfo','getAppConfig');send('SystemInfo','getApiMap');send('UserProfile','getUserProfile');send('UserProfile','cachedUserProfile')}catch(e){add('runError',String(e))}}
 addEventListener('flutterInAppWebViewPlatformReady',()=>{add('event','ready');setTimeout(run,250)});
-setTimeout(run,1500);
+setTimeout(run,1500);setTimeout(()=>send('Navigator','closePage'),5000);
 </script>
+
